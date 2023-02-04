@@ -1,0 +1,40 @@
+import time
+import numpy
+import requests
+import json
+
+
+url = "https://api.barcodespider.com/v1/lookup"
+z=open("C:/Users/MicroApt/OneDrive/Documents/Bar Code Reading/Barcode.txt","r")
+w=open("C:/Users/MicroApt/OneDrive/Documents/Bar Code Reading/my_csv1.csv",'w')
+for line in z:
+    a=z.readline(12)
+ 
+    querystring = {"upc":a}
+
+
+    headers = {
+   'token': "982348abb36db8b06b43",
+   'Host': "api.barcodespider.com",
+   'Accept-Encoding': "gzip, deflate",
+   'Connection': "keep-alive",
+   'cache-control': "no-cache"
+   }
+
+
+    response = requests.request("GET", url, headers=headers, params=querystring)
+ 
+  #print(response.text)
+    df=response.text
+    j=json.loads(df)
+  #print(j)
+try:
+    d=pd.DataFrame({'A':j['item_attributes']})
+    #print(d)  
+    d.to_csv('my_csv1.csv',mode='a',header=False)
+    dp=pd.DataFrame(j['Stores'])
+    dp.to_csv('my_csv1.csv',mode='a',header=False)
+     #print(dp)
+except:
+    print("")
+time.sleep(5)
